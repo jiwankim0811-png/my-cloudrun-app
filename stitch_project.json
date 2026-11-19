@@ -1,0 +1,19 @@
+{
+  "projectId": "projects/17197904467986631939",
+  "title": "BFS vs DFS Maze Visualizer",
+  "deviceType": "DESKTOP",
+  "visibility": "PRIVATE",
+  "createTime": "2026-11-19T02:33:42.664117Z",
+  "updateTime": "2026-11-19T02:35:25.314220Z",
+  "designSystem": "Algorithmic Lens",
+  "screens": [
+    {
+      "id": "72f0c7eecfa94b93a1a8cd279534ff07",
+      "name": "projects/17197904467986631939/screens/72f0c7eecfa94b93a1a8cd279534ff07",
+      "title": "Live Benchmark",
+      "width": 1280,
+      "height": 1275,
+      "role": "MAIN_BENCHMARK_ARENA"
+    }
+  ]
+}
