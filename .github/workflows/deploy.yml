@@ -34,6 +34,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
+          # fasion/server 폴더 우선 배포 (없을 경우 server 폴더)
           DEPLOY_DIR="fasion/server"
           if [ ! -d "$DEPLOY_DIR" ]; then
             DEPLOY_DIR="server"
@@ -47,3 +48,17 @@ jobs:
             --platform managed \
             --allow-unauthenticated \
             --set-env-vars GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}"
+
+      - name: Register URL to GAS Properties (gas-url-sync)
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} --project ${{ env.PROJECT_ID }} --region ${{ env.REGION }} --format="value(status.url)")
+          echo "Cloud Run Service URL: $SERVICE_URL"
+          WEBHOOK_URL="${{ secrets.GAS_WEBHOOK_URL }}"
+          if [ -z "$WEBHOOK_URL" ]; then
+            WEBHOOK_URL="https://script.google.com/macros/s/AKfycbzMEgK-ydhuzlU4Q3_qjCz_LFyVKGZkAva_jSItiIfsBWvpdNaknfbPnPVH93S37XrLDw/exec"
+          fi
+          echo "Syncing URL to GAS webhook: $WEBHOOK_URL"
+          curl -X POST -L \
+            -H "Content-Type: application/json" \
+            -d "{\"serviceName\": \"${{ env.SERVICE_NAME }}\", \"serviceUrl\": \"$SERVICE_URL\"}" \
+            "$WEBHOOK_URL"
