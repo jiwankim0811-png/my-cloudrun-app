@@ -91,7 +91,8 @@ def health_check():
     return {
         "status": "healthy",
         "algorithms": ["BFS", "DFS"],
-        "data_structures": ["FIFO Queue", "LIFO Stack"]
+        "data_structures": ["FIFO Queue", "LIFO Stack"],
+        "gemini_api_key_configured": bool(os.environ.get("GEMINI_API_KEY"))
     }
 
 

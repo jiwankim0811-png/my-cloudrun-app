@@ -14,7 +14,8 @@ function doGet(e) {
   try {
     const template = HtmlService.createTemplateFromFile('index');
     template.projectId = 'projects/17197904467986631939';
-    template.defaultServerUrl = 'https://your-cloud-run-service-url.a.run.app';
+    const propUrl = PropertiesService.getScriptProperties().getProperty('SERVICE_URL');
+    template.defaultServerUrl = propUrl || 'https://my-cloudrun-app-786158012233.us-central1.run.app';
 
     const htmlOutput = template.evaluate()
       .setTitle('GraphLab: BFS vs DFS Maze Escape Benchmark | Queue vs Stack 시각화')
@@ -30,6 +31,28 @@ function doGet(e) {
       '<p>' + error.message + '</p>' +
       '</div>'
     );
+  }
+}
+
+/**
+ * 웹훅 엔드포인트: Cloud Run 배포 완료 후 전달된 서비스 URL을 PropertiesService에 저장합니다.
+ * @param {Object} e - HTTP POST 이벤트 객체
+ * @return {TextOutput} JSON 응답
+ */
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const serviceUrl = data.serviceUrl || data.url;
+    if (serviceUrl) {
+      PropertiesService.getScriptProperties().setProperty('SERVICE_URL', serviceUrl);
+      return ContentService.createTextOutput(JSON.stringify({ status: 'ok', serviceUrl: serviceUrl }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    return ContentService.createTextOutput(JSON.stringify({ status: 'ignored', reason: 'No serviceUrl provided' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
   }
 }
 
