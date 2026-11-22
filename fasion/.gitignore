@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Environment Variables & Secrets (보안 필수)
+.env
+.env.*
+*.env
+.clasprc.json
+
+# Virtual Environments
+venv/
+env/
+.venv/
+algorithm-class-env/
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Generated
+.DS_Store
+Thumbs.db
